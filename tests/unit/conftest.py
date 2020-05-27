@@ -1,8 +1,11 @@
 from datetime import datetime
+from http import HTTPStatus
+from unittest.mock import MagicMock
 
 from authlib.jose import jwt
 from pytest import fixture
 
+from api.errors import PERMISSION_DENIED, INVALID_ARGUMENT, FORBIDDEN
 from app import app
 
 
@@ -20,6 +23,105 @@ def client(secret_key):
 
     with app.test_client() as client:
         yield client
+
+
+def c1fapp_api_response_mock(status_code, payload=None):
+    mock_response = MagicMock()
+
+    mock_response.status = status_code
+    mock_response.ok = status_code == HTTPStatus.OK
+
+    payload = payload or []
+
+    mock_response.json = lambda: payload
+
+    return mock_response
+
+
+def c1fapp_api_error_mock(status_code, text=None):
+    mock_response = MagicMock()
+
+    mock_response.status_code = status_code
+    mock_response.ok = status_code == HTTPStatus.OK
+
+    mock_response.text = text
+
+    return mock_response
+
+
+@fixture(scope='session')
+def c1fapp_response_ok(secret_key):
+    return c1fapp_api_response_mock(
+        HTTPStatus.OK, payload=[
+            {
+                "feed_label": [
+                    "Phishtank"
+                ],
+                "domain": [
+                    "onedrive.live.com"
+                ],
+                "description": [
+                    "Microsoft"
+                ],
+                "derived": "direct",
+                "address": [
+                    "https://onedrive.live.com/?authkey=%21AG7v3K%5Fv%5Fvmx0wU"
+                ],
+                "ip_address": [
+                    "13.107.42.13"
+                ],
+                "asn": [
+                    "-"
+                ],
+                "confidence": [
+                    95
+                ],
+                "country": [
+                    "US"
+                ],
+                "reportime": [
+                    "2020-04-12"
+                ],
+                "source": [
+                    "http://www.phishtank.com/phish_detail.php?phish_id=62961",
+                    "http://www.phishtank.com/phish_detail.php?phish_id=62961"
+                ],
+                "asn_desc": [
+                    "-"
+                ],
+                "assessment": [
+                    "phishing"
+                ]
+            }
+        ]
+    )
+
+
+@fixture(scope='session')
+def c1fapp_response_unauthorized_creds(secret_key):
+    return c1fapp_api_error_mock(
+        HTTPStatus.FORBIDDEN,
+        'Invalid API key'
+    )
+
+
+@fixture(scope='module')
+def unauthorized_creds_expected_payload(route):
+    if route in ('/observe/observables', '/health'):
+        return {
+            'errors': [
+                {'code': FORBIDDEN,
+                 'message': ("Unexpected response from C1fApp: "
+                             "Invalid API key"),
+                 'type': 'fatal'}
+            ]
+        }
+
+    if route.endswith('/deliberate/observables'):
+        return {'data': {}}
+
+    if route.endswith('/refer/observables'):
+        return {'data': []}
 
 
 @fixture(scope='session')
@@ -53,3 +155,37 @@ def invalid_jwt(valid_jwt):
     payload = jwt_encode(payload)
 
     return '.'.join([header, payload, signature])
+
+
+@fixture(scope='module')
+def invalid_jwt_expected_payload(route):
+    if route in ('/observe/observables', '/health'):
+        return {
+            'errors': [
+                {'code': PERMISSION_DENIED,
+                 'message': 'Invalid Authorization Bearer JWT.',
+                 'type': 'fatal'}
+            ]
+        }
+
+    if route.endswith('/deliberate/observables'):
+        return {'data': {}}
+
+    if route.endswith('/refer/observables'):
+        return {'data': []}
+
+
+@fixture(scope='module')
+def invalid_json_expected_payload(route, client):
+    if route.endswith('/observe/observables'):
+        return {'errors': [
+            {'code': INVALID_ARGUMENT,
+             'message': "Invalid JSON payload received. "
+                        "{0: {'value': ['Missing data for required field.']}}",
+             'type': 'fatal'}
+        ]}
+
+    if route.endswith('/deliberate/observables'):
+        return {'data': {}}
+
+    return {'data': []}
