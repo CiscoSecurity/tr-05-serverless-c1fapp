@@ -16,7 +16,7 @@ def route(request):
 
 
 def test_health_call_without_jwt_failure(
-        route, client, invalid_jwt_expected_payload
+    route, client, invalid_jwt_expected_payload
 ):
     response = client.post(route)
 
@@ -25,7 +25,7 @@ def test_health_call_without_jwt_failure(
 
 
 def test_health_call_with_invalid_jwt_failure(
-        route, client, invalid_jwt, invalid_jwt_expected_payload
+    route, client, invalid_jwt, invalid_jwt_expected_payload
 ):
     response = client.post(route, headers=headers(invalid_jwt))
 
@@ -33,25 +33,27 @@ def test_health_call_with_invalid_jwt_failure(
     assert response.json == invalid_jwt_expected_payload
 
 
+@patch('requests.post')
 def test_health_call_with_unauthorized_creds_failure(
-        route, client, valid_jwt,
-        c1fapp_response_unauthorized_creds,
-        unauthorized_creds_expected_payload,
+    mock_request, route, client, valid_jwt,
+    c1fapp_response_unauthorized_creds,
+    unauthorized_creds_expected_payload,
 ):
-    with patch('requests.post') as get_mock:
-        get_mock.return_value = c1fapp_response_unauthorized_creds
-        response = client.post(
-            route, headers=headers(valid_jwt)
-        )
+    mock_request.return_value = c1fapp_response_unauthorized_creds
+    response = client.post(
+        route, headers=headers(valid_jwt)
+    )
 
-        assert response.status_code == HTTPStatus.OK
-        assert response.json == unauthorized_creds_expected_payload
+    assert response.status_code == HTTPStatus.OK
+    assert response.json == unauthorized_creds_expected_payload
 
 
-def test_health_call_success(route, client, valid_jwt, c1fapp_response_ok):
-    with patch('requests.post') as get_mock:
-        get_mock.return_value = c1fapp_response_ok
-        response = client.post(route, headers=headers(valid_jwt))
+@patch('requests.post')
+def test_health_call_success(
+    mock_request, route, client, valid_jwt, c1fapp_response_ok
+):
+    mock_request.return_value = c1fapp_response_ok
+    response = client.post(route, headers=headers(valid_jwt))
 
-        assert response.status_code == HTTPStatus.OK
-        assert response.json == {'data': {'status': 'ok'}}
+    assert response.status_code == HTTPStatus.OK
+    assert response.json == {'data': {'status': 'ok'}}

@@ -10,6 +10,6 @@ def health():
     key = get_jwt().get('key', '')
 
     client = C1fAppClient(key)
-    _ = client.lookup('test.com')
+    _ = client.get_c1fapp_response('test.com')
 
     return jsonify_data({'status': 'ok'})

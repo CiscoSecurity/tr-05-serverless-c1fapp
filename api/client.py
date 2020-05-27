@@ -12,21 +12,19 @@ class C1fAppClient:
         self.headers = {
             'User-Agent': current_app.config['USER_AGENT']
         }
-        current_app.config['REQUEST_DATA']['key'] = api_key
-        self.data = current_app.config['REQUEST_DATA']
-
-    def lookup(self, observable):
-        data = {
-            **self.data,
-            'request': observable
+        self.data = {
+            **current_app.config['REQUEST_DATA'],
+            'key': api_key
         }
 
+    def get_c1fapp_response(self, observable):
+        self.data.update({'request': observable})
+
         response = requests.post(
-            self.api_url, headers=self.headers, data=json.dumps(data)
+            self.api_url, headers=self.headers, data=json.dumps(self.data)
         )
 
         if not response.ok:
-            print(response)
             raise UnexpectedC1fAppError(response)
 
         return response.json

@@ -17,7 +17,7 @@ def route(request):
 
 
 def test_enrich_call_with_invalid_jwt_failure(
-        route, client, invalid_jwt, invalid_jwt_expected_payload
+    route, client, invalid_jwt, invalid_jwt_expected_payload
 ):
     response = client.post(route, headers=headers(invalid_jwt))
 
@@ -31,7 +31,7 @@ def invalid_json():
 
 
 def test_enrich_call_with_valid_jwt_but_invalid_json_failure(
-        route, client, valid_jwt, invalid_json, invalid_json_expected_payload,
+    route, client, valid_jwt, invalid_json, invalid_json_expected_payload,
 ):
     response = client.post(
         route, headers=headers(valid_jwt), json=invalid_json
@@ -39,8 +39,3 @@ def test_enrich_call_with_valid_jwt_but_invalid_json_failure(
 
     assert response.status_code == HTTPStatus.OK
     assert response.json == invalid_json_expected_payload
-
-
-@fixture(scope='module')
-def valid_json():
-    return [{'type': 'domain', 'value': 'google.com'}]
