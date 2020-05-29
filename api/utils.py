@@ -40,3 +40,15 @@ def jsonify_data(data):
 
 def jsonify_errors(error):
     return jsonify({'errors': [error]})
+
+
+def all_subclasses(cls):
+    """
+        Retrieves set of class subclasses recursively.
+    """
+    subclasses = set(cls.__subclasses__())
+    return subclasses.union(s for c in subclasses for s in all_subclasses(c))
+
+
+def format_docs(docs):
+    return {'count': len(docs), 'docs': docs}
