@@ -1,5 +1,4 @@
 from abc import ABCMeta, abstractmethod
-from datetime import datetime
 from uuid import uuid4
 
 from api.utils import all_subclasses
@@ -30,11 +29,11 @@ class Mapping(metaclass=ABCMeta):
         """Returns the observable type that the mapping is able to process."""
 
     @abstractmethod
-    def _get_related(self, record): # todo
+    def _get_related(self, record):  # todo
         """Returns  relation depending on an observable and related types."""
 
     @staticmethod
-    def _map_confidence(confidence): #Todo dict with range(26) etc
+    def _map_confidence(confidence):  # Todo dict with range(26) etc
         confidence = int(confidence)
         if confidence in range(26):
             return 'Low'
@@ -54,7 +53,7 @@ class Mapping(metaclass=ABCMeta):
             'type': 'sighting',
             'source_uri': record.get('source')[0],
             'title': record.get('description')[0],
-            'confidence': self._map_confidence(record.get('confidence')[0]),  # ToDo
+            'confidence': self._map_confidence(record.get('confidence')[0]),
             'count': 1,
             'observables': [self.observable],
             'observed_time': observed_time(),
@@ -119,5 +118,10 @@ class URL(Mapping):
             for ip in ips:
                 result.append(self.observable_relation(
                     'Hosted_By', self.observable, {'type': 'ip', 'value': ip}))
-            result.append(self.observable_relation('Contains', self.observable, {'type': 'domain', 'value': domain}))
+            result.append(self.observable_relation(
+                'Contains',
+                self.observable,
+                {'type': 'domain', 'value': domain}
+            )
+            )
         return result
