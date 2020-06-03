@@ -17,3 +17,9 @@ class Config:
                   '<tr-integrations-support@cisco.com>')
 
     API_URL = 'https://www.c1fapp.com/cifapp/api/'
+
+    CONFIDENCE_MAPPING = {
+     range(26): 'Low',
+     range(26, 80): 'Medium',
+     range(80, 101): 'High'
+    }

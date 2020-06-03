@@ -1,5 +1,6 @@
 from abc import ABCMeta, abstractmethod
 from uuid import uuid4
+from flask import current_app
 
 from api.utils import all_subclasses
 
@@ -29,18 +30,15 @@ class Mapping(metaclass=ABCMeta):
         """Returns the observable type that the mapping is able to process."""
 
     @abstractmethod
-    def _get_related(self, record):  # todo
-        """Returns  relation depending on an observable and related types."""
+    def _get_related(self, record):
+        """Returns relation depending on an observable and related types."""
 
     @staticmethod
-    def _map_confidence(confidence):  # Todo dict with range(26) etc
+    def _map_confidence(confidence):
         confidence = int(confidence)
-        if confidence in range(26):
-            return 'Low'
-        elif confidence in range(26, 80):
-            return 'Medium'
-        else:
-            return 'High'
+        for range_ in current_app.config['CONFIDENCE_MAPPING']:
+            if confidence in range_:
+                return current_app.config['CONFIDENCE_MAPPING'][range_]
 
     def _sighting(self, record):
         def observed_time():
@@ -51,18 +49,17 @@ class Mapping(metaclass=ABCMeta):
             **CTIM_DEFAULTS,
             'id': f'transient:{uuid4()}',
             'type': 'sighting',
+            'source': 'C1fApp',
             'source_uri': record.get('source')[0],
-            'title': record.get('description')[0],
             'confidence': self._map_confidence(record.get('confidence')[0]),
             'count': 1,
+            'title': 'Seen on C1fApp feed',
             'observables': [self.observable],
             'observed_time': observed_time(),
             'relations': self._get_related(record)
         }
 
     def extract_sightings(self, lookup_data, limit):
-        # ToDo sort
-        # ToDo count unique add counts
         lookup_data = lookup_data[:limit]
         result = []
         for record in lookup_data:
@@ -101,7 +98,14 @@ class IP(Mapping):
         return 'ip'
 
     def _get_related(self, record):
-        return []
+        result = []
+        domains = record.get('domain')
+        for domain in domains:
+            if domain not in ('', self.observable['value']):
+                result.append(self.observable_relation(
+                    'Resolved_to', {'type': 'domain', 'value': domain}, self.observable)
+                )
+        return result
 
 
 class URL(Mapping):
@@ -112,16 +116,17 @@ class URL(Mapping):
     def _get_related(self, record):
         result = []
         ips = record.get('ip_address')
-        domain = record.get('domain')
+        domains = record.get('domain')
         address = record.get('address')
         if 'http' in address[0]:
             for ip in ips:
                 result.append(self.observable_relation(
                     'Hosted_By', self.observable, {'type': 'ip', 'value': ip}))
-            result.append(self.observable_relation(
-                'Contains',
-                self.observable,
-                {'type': 'domain', 'value': domain}
-            )
-            )
+            for domain in domains:
+                result.append(self.observable_relation(
+                    'Contains',
+                    self.observable,
+                    {'type': 'domain', 'value': domain}
+                )
+                )
         return result
