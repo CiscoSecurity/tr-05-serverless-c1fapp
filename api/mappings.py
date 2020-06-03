@@ -103,7 +103,9 @@ class IP(Mapping):
         for domain in domains:
             if domain not in ('', self.observable['value']):
                 result.append(self.observable_relation(
-                    'Resolved_to', {'type': 'domain', 'value': domain}, self.observable)
+                    'Resolved_to',
+                    {'type': 'domain', 'value': domain},
+                    self.observable)
                 )
         return result
 

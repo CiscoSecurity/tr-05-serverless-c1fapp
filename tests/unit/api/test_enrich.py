@@ -1,6 +1,7 @@
 from http import HTTPStatus
 
 from pytest import fixture
+from unittest.mock import patch
 
 from .utils import headers
 
@@ -39,3 +40,31 @@ def test_enrich_call_with_valid_jwt_but_invalid_json_failure(
 
     assert response.status_code == HTTPStatus.OK
     assert response.json == invalid_json_expected_payload
+
+
+@fixture(scope='module')
+def valid_json():
+    return [{'type': 'domain', 'value': 'onedrive.live.com'}]
+
+
+@patch('requests.post')
+def test_enrich_call_success(
+        mock_request, route, client, valid_jwt, valid_json, c1fapp_response_ok
+):
+
+    mock_request.return_value = c1fapp_response_ok
+
+    response = client.post(
+        route, headers=headers(valid_jwt), json=valid_json
+    )
+
+    assert response.status_code == HTTPStatus.OK
+
+    data = response.get_json()
+    if route == '/observe/observables':
+        assert data["data"]["sightings"]["docs"][0]["confidence"]
+        assert data["data"]["sightings"]["docs"][0]["id"]
+        assert data["data"]["sightings"]["docs"][0]["count"]
+        assert data["data"]["sightings"]["docs"][0]["observed_time"]
+        assert data["data"]["sightings"]["docs"][0]["schema_version"]
+        assert data["data"]["sightings"]["docs"][0]["type"]
