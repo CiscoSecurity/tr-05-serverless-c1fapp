@@ -30,11 +30,11 @@ def observe_observables():
 
     limit = current_app.config['CTR_ENTITIES_LIMIT']
 
-    for x in observables:
-        mapping = Mapping.for_(x)
+    for observable in observables:
+        mapping = Mapping.for_(observable)
 
         if mapping:
-            response_data = client.get_c1fapp_response(x['value'])
+            response_data = client.get_c1fapp_response(observable['value'])
             g.sightings.extend(
                 mapping.extract_sightings(response_data, limit)
             )

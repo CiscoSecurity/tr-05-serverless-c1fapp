@@ -42,7 +42,7 @@ class Mapping(metaclass=ABCMeta):
 
     def _sighting(self, record):
         def observed_time():
-            start = record.get('reportime')
+            start = record['reportime']
             return {'start_time': f'{start[0]}T00:00:00Z'}
 
         return {
@@ -50,8 +50,8 @@ class Mapping(metaclass=ABCMeta):
             'id': f'transient:{uuid4()}',
             'type': 'sighting',
             'source': 'C1fApp',
-            'source_uri': record.get('source')[0],
-            'confidence': self._map_confidence(record.get('confidence')[0]),
+            'source_uri': record['source'][0],
+            'confidence': self._map_confidence(record['confidence'][0]),
             'count': 1,
             'description': 'Seen on C1fApp feed',
             'observables': [self.observable],
@@ -84,7 +84,7 @@ class Domain(Mapping):
 
     def _get_related(self, record):
         result = []
-        ips = record.get('ip_address')
+        ips = record['ip_address']
         for ip in ips:
             result.append(self.observable_relation(
                 'Resolved_to', self.observable, {'type': 'ip', 'value': ip}))
@@ -98,7 +98,7 @@ class IP(Mapping):
 
     def _get_related(self, record):
         result = []
-        domains = record.get('domain')
+        domains = record['domain']
         for domain in domains:
             if domain not in ('', self.observable['value']):
                 result.append(self.observable_relation(
@@ -116,9 +116,9 @@ class URL(Mapping):
 
     def _get_related(self, record):
         result = []
-        ips = record.get('ip_address')
-        domains = record.get('domain')
-        address = record.get('address')
+        ips = record['ip_address']
+        domains = record['domain']
+        address = record['address']
         if 'http' in address[0]:
             for ip in ips:
                 result.append(self.observable_relation(
