@@ -49,8 +49,8 @@ def c1fapp_api_error_mock(status_code, text=None):
     return mock_response
 
 
-@fixture(scope='session')
-def c1fapp_response_ok(secret_key):
+@fixture(scope='function')
+def c1fapp_response_ok():
     return c1fapp_api_response_mock(
         HTTPStatus.OK, payload=[
             {
@@ -83,8 +83,8 @@ def c1fapp_response_ok(secret_key):
                     "2020-04-12"
                 ],
                 "source": [
-                    "http://www.phishtank.com/phish_detail.php?phish_id=62961",
-                    "http://www.phishtank.com/phish_detail.php?phish_id=62961"
+                    "http://www.phishtank.com/phish_detail.php?phish_id=62",
+                    "http://www.phishtank.com/phish_detail.php?phish_id=62"
                 ],
                 "asn_desc": [
                     "-"
@@ -105,23 +105,17 @@ def c1fapp_response_unauthorized_creds(secret_key):
     )
 
 
-@fixture(scope='module')
-def unauthorized_creds_expected_payload(route):
-    if route in ('/observe/observables', '/health'):
-        return {
-            'errors': [
-                {'code': FORBIDDEN,
-                 'message': ("Unexpected response from C1fApp: "
-                             "Invalid API key"),
-                 'type': 'fatal'}
-            ]
-        }
-
-    if route.endswith('/deliberate/observables'):
-        return {'data': {}}
-
-    if route.endswith('/refer/observables'):
-        return {'data': []}
+@fixture(scope='session')
+def unauthorized_creds_body():
+    return {
+        'data': {},
+        'errors': [
+            {'code': FORBIDDEN,
+             'message': 'Unexpected response from C1fApp: Invalid API key',
+             'type': 'fatal'
+             }
+        ]
+    }
 
 
 @fixture(scope='session')
@@ -161,6 +155,7 @@ def invalid_jwt(valid_jwt):
 def invalid_jwt_expected_payload(route):
     if route in ('/observe/observables', '/health'):
         return {
+            'data': {},
             'errors': [
                 {'code': PERMISSION_DENIED,
                  'message': 'Invalid Authorization Bearer JWT.',
@@ -178,14 +173,70 @@ def invalid_jwt_expected_payload(route):
 @fixture(scope='module')
 def invalid_json_expected_payload(route, client):
     if route.endswith('/observe/observables'):
-        return {'errors': [
-            {'code': INVALID_ARGUMENT,
-             'message': "Invalid JSON payload received. "
-                        "{0: {'value': ['Missing data for required field.']}}",
-             'type': 'fatal'}
-        ]}
+        return {
+            'data': {},
+            'errors':
+                [
+                {'code': INVALID_ARGUMENT,
+                 'message':
+                     "Invalid JSON payload received. "
+                     "{0: {'value': ['Missing data for required field.']}}",
+                 'type': 'fatal'}
+            ]
+        }
 
     if route.endswith('/deliberate/observables'):
         return {'data': {}}
 
     return {'data': []}
+
+
+def expected_payload(r, body):
+    if r.endswith('/deliberate/observables'):
+        return {'data': {}}
+
+    if r.endswith('/refer/observables'):
+        return {'data': []}
+
+    return body
+
+
+@fixture(scope='module')
+def success_enrich_body():
+    return {
+        'data':
+            {'sightings':
+             {'count': 1,
+              'docs': [
+                  {'confidence': 'High',
+                   'count': 1,
+                   'description': 'Seen on C1fApp feed',
+                   'observables': [
+                       {'type': 'domain',
+                        'value': 'onedrive.live.com'}
+                   ],
+                   'observed_time': {'start_time': '2020-04-12T00:00:00Z'},
+                   'relations': [
+                       {'origin': 'С1fApp Enrichment Module',
+                        'related': {'type': 'ip',
+                                    'value': '13.107.42.13'},
+                        'relation': 'Resolved_to',
+                        'source': {'type': 'domain',
+                                   'value': 'onedrive.live.com'}
+                        }
+                   ],
+                   'schema_version': '1.0.17',
+                   'source': 'C1fApp',
+                   'source_uri':
+                       'http://www.phishtank.com/phish_detail.php?phish_id=62',
+                   'type': 'sighting'
+                   }
+              ]
+              }
+             }
+    }
+
+
+@fixture(scope='module')
+def success_enrich_expected_payload(route, success_enrich_body):
+    return expected_payload(route, success_enrich_body)
