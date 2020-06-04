@@ -1,11 +1,11 @@
 from functools import partial
 
-from flask import Blueprint  # , current_app
+from flask import Blueprint, g, current_app
 from api.client import C1fAppClient
 from api.mappings import Mapping
 
 from api.schemas import ObservableSchema
-from api.utils import get_json, get_jwt, jsonify_data, format_docs
+from api.utils import get_json, get_jwt, jsonify_data, jsonify_result
 
 enrich_api = Blueprint('enrich', __name__)
 
@@ -26,23 +26,20 @@ def observe_observables():
     client = C1fAppClient(key)
     observables = get_observables()
 
-    data = {}
-    sightings = []
+    g.sightings = []
 
-    limit = 100  # ToDo current_app.config['CTR_ENTITIES_LIMIT']
+    limit = current_app.config['CTR_ENTITIES_LIMIT']
 
     for x in observables:
         mapping = Mapping.for_(x)
 
         if mapping:
             response_data = client.get_c1fapp_response(x['value'])
-            sightings.extend(
+            g.sightings.extend(
                 mapping.extract_sightings(response_data, limit)
             )
 
-    if sightings:
-        data['sightings'] = format_docs(sightings)
-    return jsonify_data(data)
+    return jsonify_result()
 
 
 @enrich_api.route('/refer/observables', methods=['POST'])

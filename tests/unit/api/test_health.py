@@ -37,7 +37,7 @@ def test_health_call_with_invalid_jwt_failure(
 def test_health_call_with_unauthorized_creds_failure(
     mock_request, route, client, valid_jwt,
     c1fapp_response_unauthorized_creds,
-    unauthorized_creds_expected_payload,
+    unauthorized_creds_body,
 ):
     mock_request.return_value = c1fapp_response_unauthorized_creds
     response = client.post(
@@ -45,7 +45,7 @@ def test_health_call_with_unauthorized_creds_failure(
     )
 
     assert response.status_code == HTTPStatus.OK
-    assert response.json == unauthorized_creds_expected_payload
+    assert response.json == unauthorized_creds_body
 
 
 @patch('requests.post')

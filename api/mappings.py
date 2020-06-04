@@ -53,19 +53,18 @@ class Mapping(metaclass=ABCMeta):
             'source_uri': record.get('source')[0],
             'confidence': self._map_confidence(record.get('confidence')[0]),
             'count': 1,
-            'title': 'Seen on C1fApp feed',
+            'description': 'Seen on C1fApp feed',
             'observables': [self.observable],
             'observed_time': observed_time(),
             'relations': self._get_related(record)
         }
 
-    def extract_sightings(self, lookup_data, limit):
-        lookup_data = lookup_data[:limit]
+    def extract_sightings(self, response_data, limit):
+        response_data = response_data[:limit]
         result = []
-        for record in lookup_data:
+        for record in response_data:
             sighting = self._sighting(record)
             result.append(sighting)
-
         return result
 
     @staticmethod

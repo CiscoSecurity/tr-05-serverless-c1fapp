@@ -68,3 +68,32 @@ def test_enrich_call_success(
         assert data["data"]["sightings"]["docs"][0]["observed_time"]
         assert data["data"]["sightings"]["docs"][0]["schema_version"]
         assert data["data"]["sightings"]["docs"][0]["type"]
+
+
+@fixture(scope='module')
+def valid_json_multiple():
+    return [{'type': 'domain', 'value': 'onedrive.live.com'},
+            {'type': 'domain', 'value': 'cisco.com'}]
+
+
+def test_enrich_call_success_with_extended_error_handling(
+        client, valid_jwt, valid_json_multiple, c1fapp_response_ok,
+        c1fapp_response_unauthorized_creds, success_enrich_body,
+        unauthorized_creds_body
+):
+    with patch('requests.post') as get_mock:
+        get_mock.side_effect = [c1fapp_response_ok,
+                                c1fapp_response_unauthorized_creds]
+        response = client.post(
+            '/observe/observables', headers=headers(valid_jwt),
+            json=valid_json_multiple
+        )
+
+        assert response.status_code == HTTPStatus.OK
+
+        response = response.get_json()
+
+        assert response['data']['sightings']['docs'][0].pop('id')
+
+        assert response['data'] == success_enrich_body['data']
+        assert response['errors'] == unauthorized_creds_body['errors']
