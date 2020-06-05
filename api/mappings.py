@@ -13,7 +13,7 @@ class Mapping(metaclass=ABCMeta):
 
     def __init__(self, observable):
         self.observable = observable
-        self.unique_feeds = set()
+        self.unique_feeds = {}
 
     @classmethod
     def for_(cls, observable):
@@ -83,10 +83,14 @@ class Mapping(metaclass=ABCMeta):
     def extract_indicators(self, response_data):
         result = []
         for record in response_data:
-            if record['feed_label'][0] not in self.unique_feeds:
+            if record['feed_label'][0] not in self.unique_feeds.keys():
                 indicator = self._indicator(record)
                 result.append(indicator)
-                self.unique_feeds.add(record['feed_label'][0])
+                self.unique_feeds.update(
+                    {
+                        record['feed_label'][0]: indicator['id']
+                    }
+                )
         return result
 
     @staticmethod
