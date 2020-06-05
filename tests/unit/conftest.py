@@ -216,7 +216,8 @@ def success_enrich_body():
                               {'type': 'domain',
                                'value': 'onedrive.live.com'}
                           ],
-                          'observed_time': {'start_time': '2020-04-12T00:00:00Z'},
+                          'observed_time':
+                              {'start_time': '2020-04-12T00:00:00Z'},
                           'relations': [
                               {'origin': 'С1fApp Enrichment Module',
                                'related': {'type': 'ip',
@@ -229,28 +230,28 @@ def success_enrich_body():
                           'schema_version': '1.0.17',
                           'source': 'C1fApp',
                           'source_uri':
-                              'http://www.phishtank.com/phish_detail.php?phish_id=62',
+                              'http://www.phishtank.com/'
+                              'phish_detail.php?phish_id=62',
                           'type': 'sighting'
                           }
                      ]
                      },
-                "indicators": {
-                    "count": 1,
-                    "docs": [
-                        {
-                            "confidence": "High",
-                            "schema_version": "1.0.17",
-                            "short_description": "Phishtank",
-                            "tags": [
-                                "phishing"
-                            ],
-                            "tlp": "white",
-                            "type": "indicator",
-                            "producer": "C1fApp",
-                            "valid_time": {},
-                        }
-                    ]
-                }
+                "indicators":
+                    {"count": 1,
+                     "docs": [
+                         {"confidence": "High",
+                          "schema_version": "1.0.17",
+                          "short_description": "Phishtank",
+                          "tags": [
+                              "phishing"
+                          ],
+                          "tlp": "white",
+                          "type": "indicator",
+                          "producer": "C1fApp",
+                          "valid_time": {},
+                          }
+                     ]
+                     }
             }
     }
 
