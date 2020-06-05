@@ -27,6 +27,7 @@ def observe_observables():
     observables = get_observables()
 
     g.sightings = []
+    g.indicators = []
 
     limit = current_app.config['CTR_ENTITIES_LIMIT']
 
@@ -37,6 +38,9 @@ def observe_observables():
             response_data = client.get_c1fapp_response(observable['value'])
             g.sightings.extend(
                 mapping.extract_sightings(response_data, limit)
+            )
+            g.indicators.extend(
+                mapping.extract_indicators(response_data, limit)
             )
 
     return jsonify_result()

@@ -13,6 +13,7 @@ class Mapping(metaclass=ABCMeta):
 
     def __init__(self, observable):
         self.observable = observable
+        self.unique_feeds = set()
 
     @classmethod
     def for_(cls, observable):
@@ -59,12 +60,35 @@ class Mapping(metaclass=ABCMeta):
             'relations': self._get_related(record)
         }
 
+    def _indicator(self, record):
+        return {
+            **CTIM_DEFAULTS,
+            'id': f'transient:{uuid4()}',
+            'type': 'indicator',
+            'confidence': self._map_confidence(record['confidence'][0]),
+            'tlp': 'white',
+            'tags': record['assessment'],
+            'short_description': record['feed_label'][0],
+            'valid_time': {},
+            'producer': 'C1fApp'
+        }
+
     def extract_sightings(self, response_data, limit):
         response_data = response_data[:limit]
         result = []
         for record in response_data:
             sighting = self._sighting(record)
             result.append(sighting)
+        return result
+
+    def extract_indicators(self, response_data, limit):
+        result = []
+        for record in response_data:
+            if record['feed_label'][0] not in self.unique_feeds \
+                    and len(self.unique_feeds) < limit:
+                indicator = self._indicator(record)
+                result.append(indicator)
+                self.unique_feeds.add(record['feed_label'][0])
         return result
 
     @staticmethod

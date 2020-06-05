@@ -94,6 +94,7 @@ def test_enrich_call_success_with_extended_error_handling(
         response = response.get_json()
 
         assert response['data']['sightings']['docs'][0].pop('id')
+        assert response['data']['indicators']['docs'][0].pop('id')
 
         assert response['data'] == success_enrich_body['data']
         assert response['errors'] == unauthorized_creds_body['errors']
