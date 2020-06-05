@@ -73,19 +73,17 @@ class Mapping(metaclass=ABCMeta):
             'producer': 'C1fApp'
         }
 
-    def extract_sightings(self, response_data, limit):
-        response_data = response_data[:limit]
+    def extract_sightings(self, response_data):
         result = []
         for record in response_data:
             sighting = self._sighting(record)
             result.append(sighting)
         return result
 
-    def extract_indicators(self, response_data, limit):
+    def extract_indicators(self, response_data):
         result = []
         for record in response_data:
-            if record['feed_label'][0] not in self.unique_feeds \
-                    and len(self.unique_feeds) < limit:
+            if record['feed_label'][0] not in self.unique_feeds:
                 indicator = self._indicator(record)
                 result.append(indicator)
                 self.unique_feeds.add(record['feed_label'][0])

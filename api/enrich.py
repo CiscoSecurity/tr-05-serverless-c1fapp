@@ -36,11 +36,12 @@ def observe_observables():
 
         if mapping:
             response_data = client.get_c1fapp_response(observable['value'])
+            response_data = response_data[:limit]
             g.sightings.extend(
-                mapping.extract_sightings(response_data, limit)
+                mapping.extract_sightings(response_data)
             )
             g.indicators.extend(
-                mapping.extract_indicators(response_data, limit)
+                mapping.extract_indicators(response_data)
             )
 
     return jsonify_result()
