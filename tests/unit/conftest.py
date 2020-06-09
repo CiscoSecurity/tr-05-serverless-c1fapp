@@ -205,35 +205,54 @@ def expected_payload(r, body):
 def success_enrich_body():
     return {
         'data':
-            {'sightings':
-             {'count': 1,
-              'docs': [
-                  {'confidence': 'High',
-                   'count': 1,
-                   'description': 'Seen on C1fApp feed',
-                   'observables': [
-                       {'type': 'domain',
-                        'value': 'onedrive.live.com'}
-                   ],
-                   'observed_time': {'start_time': '2020-04-12T00:00:00Z'},
-                   'relations': [
-                       {'origin': 'С1fApp Enrichment Module',
-                        'related': {'type': 'ip',
-                                    'value': '13.107.42.13'},
-                        'relation': 'Resolved_to',
-                        'source': {'type': 'domain',
-                                   'value': 'onedrive.live.com'}
-                        }
-                   ],
-                   'schema_version': '1.0.17',
-                   'source': 'C1fApp',
-                   'source_uri':
-                       'http://www.phishtank.com/phish_detail.php?phish_id=62',
-                   'type': 'sighting'
-                   }
-              ]
-              }
-             }
+            {
+                'sightings':
+                    {'count': 1,
+                     'docs': [
+                         {'confidence': 'High',
+                          'count': 1,
+                          'description': 'Seen on C1fApp feed',
+                          'observables': [
+                              {'type': 'domain',
+                               'value': 'onedrive.live.com'}
+                          ],
+                          'observed_time':
+                              {'start_time': '2020-04-12T00:00:00Z'},
+                          'relations': [
+                              {'origin': 'С1fApp Enrichment Module',
+                               'related': {'type': 'ip',
+                                           'value': '13.107.42.13'},
+                               'relation': 'Resolved_to',
+                               'source': {'type': 'domain',
+                                          'value': 'onedrive.live.com'}
+                               }
+                          ],
+                          'schema_version': '1.0.17',
+                          'source': 'C1fApp',
+                          'source_uri':
+                              'http://www.phishtank.com/'
+                              'phish_detail.php?phish_id=62',
+                          'type': 'sighting'
+                          }
+                     ]
+                     },
+                "indicators":
+                    {"count": 1,
+                     "docs": [
+                         {"confidence": "High",
+                          "schema_version": "1.0.17",
+                          "short_description": "Phishtank",
+                          "tags": [
+                              "phishing"
+                          ],
+                          "tlp": "white",
+                          "type": "indicator",
+                          "producer": "C1fApp",
+                          "valid_time": {},
+                          }
+                     ]
+                     }
+            }
     }
 
 
