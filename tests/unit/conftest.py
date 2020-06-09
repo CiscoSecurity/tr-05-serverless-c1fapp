@@ -252,16 +252,16 @@ def success_enrich_body():
                           }
                      ]
                      },
-                "relationships": {
-                    "count": 1,
-                    "docs": [
-                        {
-                            "relationship_type": "member-of",
-                            "schema_version": "1.0.17",
-                            "type": "relationship"
-                        }
-                    ]
-                }
+                "relationships":
+                    {"count": 1,
+                     "docs": [
+                         {
+                             "relationship_type": "member-of",
+                             "schema_version": "1.0.17",
+                             "type": "relationship"
+                         }
+                     ]
+                     }
             }
     }
 
