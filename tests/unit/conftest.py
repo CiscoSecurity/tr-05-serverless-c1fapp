@@ -251,7 +251,17 @@ def success_enrich_body():
                           "valid_time": {},
                           }
                      ]
-                     }
+                     },
+                "relationships": {
+                    "count": 1,
+                    "docs": [
+                        {
+                            "relationship_type": "member-of",
+                            "schema_version": "1.0.17",
+                            "type": "relationship"
+                        }
+                    ]
+                }
             }
     }
 
