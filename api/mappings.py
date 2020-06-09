@@ -48,7 +48,7 @@ class Mapping(metaclass=ABCMeta):
 
         return {
             **CTIM_DEFAULTS,
-            'id': f'transient:{uuid4()}',
+            'id': f'transient:sighting-{uuid4()}',
             'type': 'sighting',
             'source': 'C1fApp',
             'source_uri': record['source'][0],
@@ -63,7 +63,7 @@ class Mapping(metaclass=ABCMeta):
     def _indicator(self, record):
         return {
             **CTIM_DEFAULTS,
-            'id': f'transient:{uuid4()}',
+            'id': f'transient:indicator-{uuid4()}',
             'type': 'indicator',
             'confidence': self._map_confidence(record['confidence'][0]),
             'tlp': 'white',
@@ -73,24 +73,50 @@ class Mapping(metaclass=ABCMeta):
             'producer': 'C1fApp'
         }
 
+    @staticmethod
+    def _relationship(sighting_id, indicator_id):
+        return {
+            'id': f'transient:{uuid4()}',
+            'source_ref': sighting_id,
+            'target_ref': indicator_id,
+            'relationship_type': 'member-of',
+            'type': 'relationship',
+            **CTIM_DEFAULTS
+        }
+
     def extract_sightings(self, response_data):
         result = []
         for record in response_data:
+            feed_label = record['feed_label'][0]
+            if not self.unique_feeds.get(feed_label):
+                self.unique_feeds[feed_label] = {'sighting_ids': []}
             sighting = self._sighting(record)
+            self.unique_feeds[feed_label]['sighting_ids'].append(
+                sighting['id']
+            )
             result.append(sighting)
         return result
 
     def extract_indicators(self, response_data):
         result = []
         for record in response_data:
-            if record['feed_label'][0] not in self.unique_feeds.keys():
+            feed_label = record['feed_label'][0]
+            if not self.unique_feeds[feed_label].get('indicator_id'):
                 indicator = self._indicator(record)
                 result.append(indicator)
-                self.unique_feeds.update(
-                    {
-                        record['feed_label'][0]: indicator['id']
-                    }
+                self.unique_feeds[feed_label].update(
+                    {'indicator_id': indicator['id']}
                 )
+        return result
+
+    def extract_relationships(self):
+        result = []
+        unique_feeds = self.unique_feeds.keys()
+        for feed in unique_feeds:
+            for sighting_id in self.unique_feeds[feed]['sighting_ids']:
+                indicator_id = self.unique_feeds[feed]['indicator_id']
+                relationship = self._relationship(sighting_id, indicator_id)
+                result.append(relationship)
         return result
 
     @staticmethod
