@@ -49,7 +49,8 @@ def valid_json():
 
 @patch('requests.post')
 def test_enrich_call_success(
-        mock_request, route, client, valid_jwt, valid_json, c1fapp_response_ok
+        mock_request, route, client, valid_jwt,
+        valid_json, c1fapp_response_ok, success_enrich_body
 ):
 
     mock_request.return_value = c1fapp_response_ok
@@ -60,14 +61,19 @@ def test_enrich_call_success(
 
     assert response.status_code == HTTPStatus.OK
 
-    data = response.get_json()
+    response = response.get_json()
     if route == '/observe/observables':
-        assert data["data"]["sightings"]["docs"][0]["confidence"]
-        assert data["data"]["sightings"]["docs"][0]["id"]
-        assert data["data"]["sightings"]["docs"][0]["count"]
-        assert data["data"]["sightings"]["docs"][0]["observed_time"]
-        assert data["data"]["sightings"]["docs"][0]["schema_version"]
-        assert data["data"]["sightings"]["docs"][0]["type"]
+        indicators = response['data']['indicators']
+        assert indicators['count'] == 1
+
+        sightings = response['data']['sightings']
+        assert sightings['count'] == 1
+
+        assert response['data']['sightings']['docs'][0].pop('id')
+
+        assert response['data']['indicators']['docs'][0].pop('id')
+
+        assert response['data'] == success_enrich_body['data']
 
 
 @fixture(scope='module')
@@ -76,24 +82,32 @@ def valid_json_multiple():
             {'type': 'domain', 'value': 'cisco.com'}]
 
 
+@patch('requests.post')
 def test_enrich_call_success_with_extended_error_handling(
-        client, valid_jwt, valid_json_multiple, c1fapp_response_ok,
-        c1fapp_response_unauthorized_creds, success_enrich_body,
-        unauthorized_creds_body
+        mock_request, route, client, valid_jwt, valid_json_multiple,
+        c1fapp_response_ok, c1fapp_response_unauthorized_creds,
+        success_enrich_body, unauthorized_creds_body
 ):
-    with patch('requests.post') as get_mock:
-        get_mock.side_effect = [c1fapp_response_ok,
+    mock_request.side_effect = [c1fapp_response_ok,
                                 c1fapp_response_unauthorized_creds]
-        response = client.post(
-            '/observe/observables', headers=headers(valid_jwt),
-            json=valid_json_multiple
-        )
+    response = client.post(
+        route, headers=headers(valid_jwt),
+        json=valid_json_multiple
+    )
 
-        assert response.status_code == HTTPStatus.OK
+    assert response.status_code == HTTPStatus.OK
 
-        response = response.get_json()
+    response = response.get_json()
+    if route == '/observe/observables':
+        indicators = response['data']['indicators']
+        assert indicators['count'] == 1
+
+        sightings = response['data']['sightings']
+        assert sightings['count'] == 1
 
         assert response['data']['sightings']['docs'][0].pop('id')
+
+        assert response['data']['indicators']['docs'][0].pop('id')
 
         assert response['data'] == success_enrich_body['data']
         assert response['errors'] == unauthorized_creds_body['errors']
