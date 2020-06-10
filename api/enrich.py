@@ -28,6 +28,7 @@ def observe_observables():
 
     g.sightings = []
     g.indicators = []
+    g.relationships = []
 
     limit = current_app.config['CTR_ENTITIES_LIMIT']
 
@@ -43,7 +44,9 @@ def observe_observables():
             g.indicators.extend(
                 mapping.extract_indicators(response_data)
             )
-
+            g.relationships.extend(
+                mapping.extract_relationships()
+            )
     return jsonify_result()
 
 
