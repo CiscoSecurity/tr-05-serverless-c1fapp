@@ -1,6 +1,7 @@
 from abc import ABCMeta, abstractmethod
 from uuid import uuid4
 from flask import current_app
+from collections import defaultdict
 
 from api.utils import all_subclasses
 
@@ -13,7 +14,7 @@ class Mapping(metaclass=ABCMeta):
 
     def __init__(self, observable):
         self.observable = observable
-        self.unique_feeds = {}
+        self.unique_feeds = defaultdict(lambda: defaultdict(list))
 
     @classmethod
     def for_(cls, observable):
@@ -88,8 +89,6 @@ class Mapping(metaclass=ABCMeta):
         result = []
         for record in response_data:
             feed_label = record['feed_label'][0]
-            if not self.unique_feeds.get(feed_label):
-                self.unique_feeds[feed_label] = {'sighting_ids': []}
             sighting = self._sighting(record)
             self.unique_feeds[feed_label]['sighting_ids'].append(
                 sighting['id']
@@ -104,9 +103,7 @@ class Mapping(metaclass=ABCMeta):
             if not self.unique_feeds[feed_label].get('indicator_id'):
                 indicator = self._indicator(record)
                 result.append(indicator)
-                self.unique_feeds[feed_label].update(
-                    {'indicator_id': indicator['id']}
-                )
+                self.unique_feeds[feed_label]['indicator_id'] = indicator['id']
         return result
 
     def extract_relationships(self):
