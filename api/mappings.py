@@ -134,6 +134,13 @@ class Domain(Mapping):
     def _get_related(self, record):
         result = []
         ips = record['ip_address']
+        address = record['address']
+        if 'http' in address[0]:
+            result.append(self.observable_relation(
+                'Contains',
+                {'type': 'url', 'value': address[0]},
+                self.observable)
+            )
         for ip in ips:
             if ip:
                 result.append(self.observable_relation(
@@ -181,7 +188,6 @@ class URL(Mapping):
                 result.append(self.observable_relation(
                     'Contains',
                     self.observable,
-                    {'type': 'domain', 'value': domain}
-                )
+                    {'type': 'domain', 'value': domain})
                 )
         return result
