@@ -226,6 +226,19 @@ def success_enrich_body():
                                  {
                                      "origin": "С1fApp Enrichment Module",
                                      "related": {
+                                         "type": "domain",
+                                         "value": "onedrive.live.com"
+                                     },
+                                     "relation": "Contains",
+                                     "source": {
+                                         "type": "url",
+                                         "value": "https://onedrive.live.com/?"
+                                                  "authkey=%21AG7v3K%5Fv%5Fvmx0wU"
+                                     }
+                                 },
+                                 {
+                                     "origin": "С1fApp Enrichment Module",
+                                     "related": {
                                          "type": "ip",
                                          "value": "13.107.42.13"
                                      },
