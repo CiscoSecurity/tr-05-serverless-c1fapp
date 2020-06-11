@@ -52,7 +52,7 @@ class Mapping(metaclass=ABCMeta):
             'id': f'transient:sighting-{uuid4()}',
             'type': 'sighting',
             'source': 'C1fApp',
-            'source_uri': record['source'][0],
+            'source_uri': record['source'][0].split(',')[0],
             'confidence': self._map_confidence(record['confidence'][0]),
             'count': 1,
             'description': 'Seen on C1fApp feed',
