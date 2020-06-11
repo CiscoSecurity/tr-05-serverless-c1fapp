@@ -135,8 +135,13 @@ class Domain(Mapping):
         result = []
         ips = record['ip_address']
         for ip in ips:
-            result.append(self.observable_relation(
-                'Resolved_to', self.observable, {'type': 'ip', 'value': ip}))
+            if ip:
+                result.append(self.observable_relation(
+                    'Resolved_to',
+                    self.observable,
+                    {'type': 'ip', 'value': ip}
+                )
+                )
         return result
 
 
