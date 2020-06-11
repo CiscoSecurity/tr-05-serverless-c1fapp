@@ -232,8 +232,9 @@ def success_enrich_body():
                                      "relation": "Contains",
                                      "source": {
                                          "type": "url",
-                                         "value": "https://onedrive.live.com/?"
-                                                  "authkey=%21AG7v3K%5Fv%5Fvmx0wU"
+                                         "value": "https://onedrive.live.com/"
+                                                  "?authkey=%21AG7v3K%5Fv"
+                                                  "%5Fvmx0wU"
                                      }
                                  },
                                  {
