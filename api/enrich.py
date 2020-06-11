@@ -37,6 +37,9 @@ def observe_observables():
 
         if mapping:
             response_data = client.get_c1fapp_response(observable['value'])
+            response_data.sort(
+                key=lambda x: x['reportime'], reverse=True
+            )
             response_data = response_data[:limit]
             g.sightings.extend(
                 mapping.extract_sightings(response_data)

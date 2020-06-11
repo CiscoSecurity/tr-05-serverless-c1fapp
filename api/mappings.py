@@ -52,7 +52,7 @@ class Mapping(metaclass=ABCMeta):
             'id': f'transient:sighting-{uuid4()}',
             'type': 'sighting',
             'source': 'C1fApp',
-            'source_uri': record['source'][0],
+            'source_uri': record['source'][0].split(',')[0],
             'confidence': self._map_confidence(record['confidence'][0]),
             'count': 1,
             'description': 'Seen on C1fApp feed',
@@ -134,9 +134,21 @@ class Domain(Mapping):
     def _get_related(self, record):
         result = []
         ips = record['ip_address']
-        for ip in ips:
+        address = record['address']
+        if 'http' in address[0]:
             result.append(self.observable_relation(
-                'Resolved_to', self.observable, {'type': 'ip', 'value': ip}))
+                'Contains',
+                {'type': 'url', 'value': address[0]},
+                self.observable)
+            )
+        for ip in ips:
+            if ip:
+                result.append(self.observable_relation(
+                    'Resolved_to',
+                    self.observable,
+                    {'type': 'ip', 'value': ip}
+                )
+                )
         return result
 
 
@@ -176,7 +188,6 @@ class URL(Mapping):
                 result.append(self.observable_relation(
                     'Contains',
                     self.observable,
-                    {'type': 'domain', 'value': domain}
-                )
+                    {'type': 'domain', 'value': domain})
                 )
         return result
