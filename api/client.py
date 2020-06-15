@@ -4,11 +4,6 @@ from flask import current_app
 
 from api.errors import UnexpectedC1fAppError
 
-NOT_CRITICAL_ERRORS = (
-    'Unsupported request ? IPv4/Domain only',  # ToDo
-    'Empty Search! Availiable search: IPv4/URL/Domain'
-)
-
 
 class C1fAppClient:
     def __init__(self, api_key):
@@ -29,10 +24,7 @@ class C1fAppClient:
             self.api_url, headers=self.headers, json=self.data
         )
 
-        if response.text in NOT_CRITICAL_ERRORS:
-            return []
+        if not response.ok:
+            raise UnexpectedC1fAppError(response)
 
-        if response.ok:
-            return response.json()
-
-        raise UnexpectedC1fAppError(response)
+        return response.json()
