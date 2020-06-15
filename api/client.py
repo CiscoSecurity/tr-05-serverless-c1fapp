@@ -5,8 +5,8 @@ from flask import current_app
 from api.errors import UnexpectedC1fAppError
 
 NOT_CRITICAL_ERRORS = (
-    'Unsupported request ? IPv4/Domain only',  # ToDo
-    'Empty Search! Availiable search: IPv4/URL/Domain'
+    'Unsupported request ? IPv4/Domain only',
+    'Empty Search! Available search: IPv4/URL/Domain'
 )
 
 
