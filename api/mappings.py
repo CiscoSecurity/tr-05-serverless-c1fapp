@@ -139,7 +139,7 @@ class Domain(Mapping):
             result.append(self.observable_relation(
                 'Contains',
                 {'type': 'url', 'value': address[0]},
-                record['domain'][0])
+                {'type': 'domain', 'value': record['domain'][0]})
             )
         for ip in ips:
             if ip:
