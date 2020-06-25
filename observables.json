@@ -1,14 +1,14 @@
 [
   {
     "type": "domain",
-    "value": "bit.do"
+    "value": "cisco.com"
   },
   {
     "type": "ip",
-    "value": "77.70.96.195"
+    "value": "1.1.1.1"
   },
   {
     "type": "url",
-    "value": "http://suidi.com/New-Invoices-June/"
+    "value": "https://cisco.com/"
   }
 ]
