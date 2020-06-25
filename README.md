@@ -273,14 +273,14 @@ header set to `Bearer <JWT>`.
 ### CTIM Mapping Specifics
 
 Each response from the C1fApp API for the supported observables generates the following CTIM entities:
-- `Sighting` from each entry in response:
+- `Sighting` from each entry in the response:
   - Value from `.[].confidence[]` will map to `Sighting` confidence
   - Value from `.[].source[0]` will map to `source_uri`.
   - Observed relations between `.[].ip_address[]`, `.[].domain[]`, and `.[].address[]`
     - `.[].domain[]` -> `Resolved_To` -> `.[].ip_address[]`
     - `.[].address[]` -> `Contains` -> `.[].domain[]` (When the address value is a URL)
     - `.[].address[]` -> `Hosted_By` -> `.[].ip_address[]` (When the address value is a URL)
-- `Indicator` from each entry in response:
+- `Indicator` from each entry in the response:
   - Each unique feed will be an indicator based on the `.[].feed_label[]` value
   - Value from `.[].assessment[]` will map to `Indicator` tags
   - Value from `.[].confidence[]` will map to `Indicator` confidence
