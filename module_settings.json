@@ -1,0 +1,11 @@
+{
+  "name": "C1fApp",
+  "jwt": {
+    "key": "C1fApp API Key"
+  },
+  "region": {
+    "us": "18aeffa4-0bf9-42a3-8dcb-fcb8842aa2a3",
+    "eu": "24e929a6-b423-4931-805a-36974f5767f3",
+    "apjc": "7adc573a-add3-4102-b884-067195c2daed"
+  }
+}
