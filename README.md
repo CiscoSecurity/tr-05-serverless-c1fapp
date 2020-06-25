@@ -284,4 +284,4 @@ Each response from the C1fApp API for the supported observables generates the fo
   - Each unique feed will be an indicator based on the `.[].feed_label[]` value
   - Value from `.[].assessment[]` will map to `Indicator` tags
   - Value from `.[].confidence[]` will map to `Indicator` confidence
-- `Relationship` between `Sighting` and `Indicators` with the relationship type of `member-of` because they are based on feeds.
+- `Relationship` between `Sighting` and `Indicator` with the relationship type of `member-of` because they are based on feeds.
