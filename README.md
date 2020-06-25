@@ -276,7 +276,7 @@ Each response from the C1fApp API for the supported observables generates the fo
 - `Sighting` from each entry in response:
   - Value from `.[].confidence[]` will map to `Sighting` confidence
   - Value from `.[].source[0]` will map to `source_uri`.
-  - Observed Relations between `.[].ip_address[]`, `.[].domain[]`, and `.[].address[]`
+  - Observed relations between `.[].ip_address[]`, `.[].domain[]`, and `.[].address[]`
     - `.[].domain[]` -> `Resolved_To` -> `.[].ip_address[]`
     - `.[].address[]` -> `Contains` -> `.[].domain[]` (When the address value is a URL)
     - `.[].address[]` -> `Hosted_By` -> `.[].ip_address[]` (When the address value is a URL)
