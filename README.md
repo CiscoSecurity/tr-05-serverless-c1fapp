@@ -277,7 +277,7 @@ Each response from the C1fApp API for the supported observables generates the fo
   - Value from `.[].confidence[]` will map to `Sighting` confidence
   - Value from `.[].source[0]` will map to `source_uri`
   - Value from `.[].reportime[]` will map to `observed_time.start_time` (It will be converted from the format `2020-04-20` to CTIM format 
-  by filling in the time values with zeros `2018-10-11T00:00:00.000Z`)
+  by filling in the time values with zeros `2020-04-201T00:00:00.000Z`)
   - Observed relations between `.[].ip_address[]`, `.[].domain[]`, and `.[].address[]`
     - `.[].domain[]` -> `Resolved_To` -> `.[].ip_address[]`
     - `.[].address[]` -> `Contains` -> `.[].domain[]` (When the address value is a URL)
