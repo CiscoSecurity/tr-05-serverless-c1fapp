@@ -67,4 +67,7 @@ def jsonify_result():
     if g.get('errors'):
         result['errors'] = g.errors
 
+    if not result['data']:
+        del result['data']
+
     return jsonify(result)
