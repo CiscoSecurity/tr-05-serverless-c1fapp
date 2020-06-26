@@ -275,7 +275,9 @@ header set to `Bearer <JWT>`.
 Each response from the C1fApp API for the supported observables generates the following CTIM entities:
 - `Sighting` from each entry in the response:
   - Value from `.[].confidence[]` will map to `Sighting` confidence
-  - Value from `.[].source[0]` will map to `source_uri`.
+  - Value from `.[].source[0]` will map to `source_uri`
+  - Value from `.[].reportime[]` will map to `observed_time.start_time` (It will be converted from the format `YYYY-MM-DD` to CTIM format 
+  by filling in the time values with zeros `YYYY-MM-DDT00:00:00.000Z`)
   - Observed relations between `.[].ip_address[]`, `.[].domain[]`, and `.[].address[]`
     - `.[].domain[]` -> `Resolved_To` -> `.[].ip_address[]`
     - `.[].address[]` -> `Contains` -> `.[].domain[]` (When the address value is a URL)
