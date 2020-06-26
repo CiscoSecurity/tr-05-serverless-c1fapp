@@ -108,7 +108,6 @@ def c1fapp_response_unauthorized_creds(secret_key):
 @fixture(scope='session')
 def unauthorized_creds_body():
     return {
-        'data': {},
         'errors': [
             {'code': FORBIDDEN,
              'message': 'Unexpected response from C1fApp: Invalid API key',
@@ -155,7 +154,6 @@ def invalid_jwt(valid_jwt):
 def invalid_jwt_expected_payload(route):
     if route in ('/observe/observables', '/health'):
         return {
-            'data': {},
             'errors': [
                 {'code': PERMISSION_DENIED,
                  'message': 'Invalid Authorization Bearer JWT.',
@@ -174,15 +172,15 @@ def invalid_jwt_expected_payload(route):
 def invalid_json_expected_payload(route, client):
     if route.endswith('/observe/observables'):
         return {
-            'data': {},
             'errors':
                 [
-                {'code': INVALID_ARGUMENT,
-                 'message':
-                     "Invalid JSON payload received. "
-                     "{0: {'value': ['Missing data for required field.']}}",
-                 'type': 'fatal'}
-            ]
+                    {'code': INVALID_ARGUMENT,
+                     'message':
+                         "Invalid JSON payload received. "
+                         "{0: {'value': ['Missing data for "
+                         "required field.']}}",
+                     'type': 'fatal'}
+                ]
         }
 
     if route.endswith('/deliberate/observables'):
