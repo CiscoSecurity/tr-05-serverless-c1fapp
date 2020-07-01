@@ -3,7 +3,7 @@ from uuid import uuid4
 from flask import current_app
 from collections import defaultdict
 
-from api.utils import all_subclasses
+from api.utils import all_subclasses, key_error_handler
 
 CTIM_DEFAULTS = {
     'schema_version': '1.0.17',
@@ -42,6 +42,7 @@ class Mapping(metaclass=ABCMeta):
             if confidence in range_:
                 return current_app.config['CONFIDENCE_MAPPING'][range_]
 
+    @key_error_handler
     def _sighting(self, record):
         def observed_time():
             start = record['reportime']
@@ -61,6 +62,7 @@ class Mapping(metaclass=ABCMeta):
             'relations': self._get_related(record)
         }
 
+    @key_error_handler
     def _indicator(self, record):
         return {
             **CTIM_DEFAULTS,

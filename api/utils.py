@@ -1,7 +1,7 @@
 from authlib.jose import jwt
 from authlib.jose.errors import JoseError
 from flask import request, current_app, jsonify, g
-from api.errors import InvalidJWTError, InvalidArgumentError
+from api.errors import InvalidJWTError, InvalidArgumentError, C1fAppKeyError
 
 
 def get_jwt():
@@ -71,3 +71,13 @@ def jsonify_result():
         del result['data']
 
     return jsonify(result)
+
+
+def key_error_handler(func):
+    def wrapper(*args, **kwargs):
+        try:
+            result = func(*args, **kwargs)
+        except KeyError:
+            raise C1fAppKeyError
+        return result
+    return wrapper
