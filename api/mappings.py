@@ -42,7 +42,6 @@ class Mapping(metaclass=ABCMeta):
             if confidence in range_:
                 return current_app.config['CONFIDENCE_MAPPING'][range_]
 
-    @key_error_handler
     def _sighting(self, record):
         def observed_time():
             start = record['reportime']
@@ -62,7 +61,6 @@ class Mapping(metaclass=ABCMeta):
             'relations': self._get_related(record)
         }
 
-    @key_error_handler
     def _indicator(self, record):
         return {
             **CTIM_DEFAULTS,
@@ -87,6 +85,7 @@ class Mapping(metaclass=ABCMeta):
             **CTIM_DEFAULTS
         }
 
+    @key_error_handler
     def extract_sightings(self, response_data):
         result = []
         for record in response_data:
@@ -98,6 +97,7 @@ class Mapping(metaclass=ABCMeta):
             result.append(sighting)
         return result
 
+    @key_error_handler
     def extract_indicators(self, response_data):
         result = []
         for record in response_data:
