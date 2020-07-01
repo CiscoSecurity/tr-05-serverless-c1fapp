@@ -97,6 +97,48 @@ def c1fapp_response_ok():
     )
 
 
+@fixture(scope='function')
+def c1fapp_invalid_response():
+    return c1fapp_api_response_mock(
+        HTTPStatus.OK, payload=[
+            {
+                "feed_label": [
+                    "Phishtank"
+                ],
+                "domain": [
+                    "onedrive.live.com"
+                ],
+                "description": [
+                    "Microsoft"
+                ],
+                "derived": "direct",
+                "address": [
+                    "https://onedrive.live.com/?authkey=%21AG7v3K%5Fv%5Fvmx0wU"
+                ],
+                "ip_address": [
+                    "13.107.42.13"
+                ],
+                "asn": [
+                    "-"
+                ],
+                "country": [
+                    "US"
+                ],
+                "reportime": [
+                    "2020-04-12"
+                ],
+                "source": [
+                    "http://www.phishtank.com/phish_detail.php?phish_id=62",
+                    "http://www.phishtank.com/phish_detail.php?phish_id=62"
+                ],
+                "asn_desc": [
+                    "-"
+                ]
+            }
+        ]
+    )
+
+
 @fixture(scope='session')
 def c1fapp_response_unauthorized_creds(secret_key):
     return c1fapp_api_error_mock(
@@ -181,6 +223,26 @@ def invalid_json_expected_payload(route, client):
                          "required field.']}}",
                      'type': 'fatal'}
                 ]
+        }
+
+    if route.endswith('/deliberate/observables'):
+        return {'data': {}}
+
+    return {'data': []}
+
+
+@fixture(scope='module')
+def key_error_expected_payload(route, client):
+    if route.endswith('/observe/observables'):
+        return {
+            'errors': [
+                {
+                    'code': 'key error',
+                    'message': 'The data structure of C1fApp '
+                               'API has changed. The module is broken.',
+                    'type': 'fatal'
+                }
+            ]
         }
 
     if route.endswith('/deliberate/observables'):

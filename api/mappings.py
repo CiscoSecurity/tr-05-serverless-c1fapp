@@ -3,7 +3,7 @@ from uuid import uuid4
 from flask import current_app
 from collections import defaultdict
 
-from api.utils import all_subclasses
+from api.utils import all_subclasses, key_error_handler
 
 CTIM_DEFAULTS = {
     'schema_version': '1.0.17',
@@ -85,6 +85,7 @@ class Mapping(metaclass=ABCMeta):
             **CTIM_DEFAULTS
         }
 
+    @key_error_handler
     def extract_sightings(self, response_data):
         result = []
         for record in response_data:
@@ -96,6 +97,7 @@ class Mapping(metaclass=ABCMeta):
             result.append(sighting)
         return result
 
+    @key_error_handler
     def extract_indicators(self, response_data):
         result = []
         for record in response_data:

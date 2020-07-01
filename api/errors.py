@@ -8,6 +8,7 @@ TOO_MANY_REQUESTS = 'too many requests'
 UNAUTHORIZED = 'unauthorized'
 NOT_FOUND = 'not found'
 UNAVAILABLE = 'unavailable'
+KEY_ERROR = 'key error'
 
 
 class TRFormattedError(Exception):
@@ -55,4 +56,14 @@ class UnexpectedC1fAppError(TRFormattedError):
         super().__init__(
             status_code_map.get(response.status_code),
             f'Unexpected response from C1fApp: {response.text}'
+        )
+
+
+class C1fAppKeyError(TRFormattedError):
+    def __init__(self):
+
+        super().__init__(
+            code=KEY_ERROR,
+            message='The data structure of C1fApp API has changed. '
+                    'The module is broken.'
         )
