@@ -44,8 +44,11 @@ class Mapping(metaclass=ABCMeta):
 
     def _sighting(self, record):
         def observed_time():
-            start = record['reportime']
-            return {'start_time': f'{start[0]}T00:00:00Z'}
+            start_time = f"{record['reportime'][0]}T00:00:00Z"
+            return {
+                'start_time': start_time,
+                'end_time': start_time
+            }
 
         return {
             **CTIM_DEFAULTS,
