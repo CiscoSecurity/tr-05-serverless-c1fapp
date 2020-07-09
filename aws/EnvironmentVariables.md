@@ -3,7 +3,7 @@
 **NOTE.** Feel free to skip this document until you have deployed your Lambda
 (check the [AWS HOWTO](HOWTO.md) for more details on how to properly set up your
 AWS environment first and then follow the instructions from the
-[README](../../../Downloads/tr-05-serverless-have-i-been-pwned-develop/README.md) to finally deploy your Lambda). But once your Lambda has
+[README](../README.md) to finally deploy your Lambda). But once your Lambda has
 been successfully deployed, make sure to return back to this document for some
 extra configuration tweaks.
 
@@ -25,7 +25,7 @@ Example:
             "key_1": "value_1",
             "key_2": "value_2",
             "key_3": "value_3",
-            ...
+             ...
         }
     }
 }
