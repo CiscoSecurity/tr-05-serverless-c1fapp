@@ -280,7 +280,7 @@ def success_enrich_body():
                                  }
                              ],
                              "observed_time": {
-                                 'end_time': '2020-04-12T00:00:00Z',
+                                 "end_time": "2020-04-12T00:00:00Z",
                                  "start_time": "2020-04-12T00:00:00Z"
                              },
                              "relations": [
