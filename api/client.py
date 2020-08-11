@@ -2,7 +2,7 @@ import requests
 
 from flask import current_app
 
-from api.errors import UnexpectedC1fAppError
+from api.errors import UnexpectedC1fAppError, C1fAppSSLError
 
 NOT_CRITICAL_ERRORS = (
     'Unsupported request ? IPv4/Domain only',
@@ -25,9 +25,12 @@ class C1fAppClient:
     def get_c1fapp_response(self, observable):
         self.data.update({'request': observable})
 
-        response = requests.post(
-            self.api_url, headers=self.headers, json=self.data
-        )
+        try:
+            response = requests.post(
+                self.api_url, headers=self.headers, json=self.data
+            )
+        except requests.exceptions.SSLError as exception:
+            raise C1fAppSSLError(exception)
 
         if response.text in NOT_CRITICAL_ERRORS:
             return []

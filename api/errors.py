@@ -67,3 +67,14 @@ class C1fAppKeyError(TRFormattedError):
             message='The data structure of C1fApp API has changed. '
                     'The module is broken.'
         )
+
+
+class C1fAppSSLError(TRFormattedError):
+    def __init__(self, exception):
+        message = getattr(
+            exception.args[0].reason.args[0], 'verify_message', ''
+        ) or exception.args[0].reason.args[0].args[0]
+        super().__init__(
+            code=UNKNOWN,
+            message=f'Certificate verify failed: {message}'
+        )
