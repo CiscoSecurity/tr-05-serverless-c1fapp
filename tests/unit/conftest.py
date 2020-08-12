@@ -268,7 +268,7 @@ def ssl_error_expected_payload(route, client):
                 {
                     'code': 'unknown',
                     'message': 'Unable to verify SSL certificate: '
-                               'self signed certificate',
+                               'Self signed certificate',
                     'type': 'fatal'
                 }
             ]
