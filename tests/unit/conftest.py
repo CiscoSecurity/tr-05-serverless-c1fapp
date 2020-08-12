@@ -1,4 +1,5 @@
 from datetime import datetime
+from requests.exceptions import SSLError
 from http import HTTPStatus
 from unittest.mock import MagicMock
 
@@ -240,6 +241,34 @@ def key_error_expected_payload(route, client):
                     'code': 'key error',
                     'message': 'The data structure of C1fApp '
                                'API has changed. The module is broken.',
+                    'type': 'fatal'
+                }
+            ]
+        }
+
+    if route.endswith('/deliberate/observables'):
+        return {'data': {}}
+
+    return {'data': []}
+
+
+@fixture(scope='session')
+def c1fapp_ssl_exception_mock(secret_key):
+    mock_exception = MagicMock()
+    mock_exception.reason.args.__getitem__().verify_message \
+        = 'self signed certificate'
+    return SSLError(mock_exception)
+
+
+@fixture(scope='module')
+def ssl_error_expected_payload(route, client):
+    if route in ('/observe/observables', '/health'):
+        return {
+            'errors': [
+                {
+                    'code': 'unknown',
+                    'message': 'Unable to verify SSL certificate: '
+                               'self signed certificate',
                     'type': 'fatal'
                 }
             ]
