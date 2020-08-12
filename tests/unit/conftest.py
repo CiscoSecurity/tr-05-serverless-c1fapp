@@ -255,7 +255,8 @@ def key_error_expected_payload(route, client):
 @fixture(scope='session')
 def c1fapp_ssl_exception_mock(secret_key):
     mock_exception = MagicMock()
-    mock_exception.reason.args.__getitem__().verify_message = 'self signed certificate'
+    mock_exception.reason.args.__getitem__().verify_message \
+        = 'self signed certificate'
     return SSLError(mock_exception)
 
 

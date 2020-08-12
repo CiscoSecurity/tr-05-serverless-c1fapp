@@ -76,5 +76,5 @@ class C1fAppSSLError(TRFormattedError):
         ) or exception.args[0].reason.args[0].args[0]
         super().__init__(
             code=UNKNOWN,
-            message=f'Certificate verify failed: {message}'
+            message=f'Unable to verify SSL certificate: {message}'
         )
