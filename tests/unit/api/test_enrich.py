@@ -1,7 +1,7 @@
 from http import HTTPStatus
 
 from pytest import fixture
-from unittest.mock import patch
+from unittest.mock import patch, MagicMock
 
 from .utils import headers
 
@@ -143,3 +143,22 @@ def test_enrich_with_key_error(
 
     response = response.get_json()
     assert response == key_error_expected_payload
+
+
+@patch('requests.post')
+def test_enrich_with_ssl_error(
+        mock_request, route, client, valid_jwt,
+        valid_json, c1fapp_ssl_exception_mock,
+        ssl_error_expected_payload
+):
+
+    mock_request.side_effect = c1fapp_ssl_exception_mock
+
+    response = client.post(
+        route, headers=headers(valid_jwt), json=valid_json
+    )
+
+    assert response.status_code == HTTPStatus.OK
+
+    response = response.get_json()
+    assert response == ssl_error_expected_payload
