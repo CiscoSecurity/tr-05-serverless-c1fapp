@@ -360,6 +360,7 @@ def success_enrich_body():
                           "tlp": "white",
                           "type": "indicator",
                           "producer": "C1fApp",
+                          "title": "Feed: Phishtank",
                           "valid_time": {},
                           }
                      ]
