@@ -192,7 +192,7 @@ class URL(Mapping):
                 result.append(self.observable_relation(
                     'Hosted_By', self.observable, {'type': 'ip', 'value': ip}))
             for domain in domains:
-                if domain in address[0]:
+                if domain in self.observable['value']:
                     result.append(self.observable_relation(
                         'Contains',
                         self.observable,
