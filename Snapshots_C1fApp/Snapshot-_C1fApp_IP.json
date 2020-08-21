@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0.16",
+  "type": "investigation",
+  "search-txt": "ip:\"91.200.12.53\"",
+  "source": "Anastasiia Rozlyvan",
+  "actions": "[{\"created-perf\":2432235000000,\"updated-perf\":2432235000000,\"type\":\"collect\",\"created\":\"2020-08-19T12:50:04.166Z\",\"state\":\"ok\",\"arg\":\"91.200.12.53\",\"result\":[{\"value\":\"91.200.12.53\",\"type\":\"ip\"}],\"id\":\"collect-5f3fcb38\",\"uuid\":\"df40dec4-ba0e-4df1-be36-e1a745208d6e\"},{\"created-perf\":2433451000000,\"updated-perf\":2433451000000,\"type\":\"investigate\",\"created\":\"2020-08-19T12:50:05.382Z\",\"state\":\"ok\",\"arg\":{\"type\":\"ip\",\"value\":\"91.200.12.53\"},\"result\":{\"data\":[{\"module\":\"C1fApp\",\"module_instance_id\":\"99a21d4d-c75e-41cb-887a-bf4fe5699c39\",\"module_type_id\":\"18aeffa4-0bf9-42a3-8dcb-fcb8842aa2a3\",\"data\":{\"indicators\":{\"count\":1,\"docs\":[{\"tags\":[\"Spam\"],\"valid_time\":{},\"producer\":\"C1fApp\",\"schema_version\":\"1.0.17\",\"type\":\"indicator\",\"short_description\":\"SpamHaus\",\"title\":\"SpamHaus\",\"id\":\"transient:indicator-df3b368a-8172-4b02-bfc0-b54145ef8c69\",\"tlp\":\"white\",\"confidence\":\"High\"}]},\"relationships\":{\"count\":1,\"docs\":[{\"schema_version\":\"1.0.17\",\"target_ref\":\"transient:indicator-df3b368a-8172-4b02-bfc0-b54145ef8c69\",\"type\":\"relationship\",\"source_ref\":\"transient:sighting-97c1135e-d7b1-4059-9f2f-69f14c9afffa\",\"id\":\"transient:b164b647-19f9-422d-8ade-dec77f011f63\",\"relationship_type\":\"member-of\"}]},\"sightings\":{\"count\":1,\"docs\":[{\"description\":\"Seen on C1fApp feed\",\"schema_version\":\"1.0.17\",\"relations\":[],\"observables\":[{\"value\":\"91.200.12.53\",\"type\":\"ip\"}],\"type\":\"sighting\",\"source\":\"C1fApp\",\"source_uri\":\"http://www.spamhaus.org/query/bl?ip=91.200.12.53\",\"id\":\"transient:sighting-97c1135e-d7b1-4059-9f2f-69f14c9afffa\",\"count\":1,\"confidence\":\"High\",\"observed_time\":{\"start_time\":\"2020-08-19T00:00:00.000Z\",\"end_time\":\"2020-08-19T00:00:00.000Z\"}}]}}}]},\"id\":\"investigate-d14a28bd\",\"uuid\":\"ccd4d64c-bfce-409b-be63-57f528a670aa\"}]",
+  "short_description": "Snapshot _C1fApp_IP",
+  "id": "https://private.intel.amp.cisco.com:443/ctia/investigation/investigation-13646717-f9bf-4c78-b525-7c681a8fe19b",
+  "tlp": "amber",
+  "groups": [
+    "32e22c6d-7624-477e-8bbd-989c979b552e"
+  ],
+  "timestamp": "2020-08-19T12:50:31.285Z",
+  "owner": "9d64bbce-2e7c-43f0-b9d7-0e2fa3c2d88d"
+}
