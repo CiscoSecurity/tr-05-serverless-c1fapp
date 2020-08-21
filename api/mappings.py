@@ -74,7 +74,8 @@ class Mapping(metaclass=ABCMeta):
             'tags': record['assessment'],
             'short_description': record['feed_label'][0],
             'valid_time': {},
-            'producer': 'C1fApp'
+            'producer': 'C1fApp',
+            'title': f'Feed: {record["feed_label"][0]}',
         }
 
     @staticmethod
@@ -140,7 +141,8 @@ class Domain(Mapping):
         result = []
         ips = record['ip_address']
         address = record['address']
-        if 'http' in address[0]:
+        if 'http' in address[0] and record['domain'][0] \
+                == self.observable['value']:
             result.append(self.observable_relation(
                 'Contains',
                 {'type': 'url', 'value': address[0]},
@@ -190,9 +192,10 @@ class URL(Mapping):
                 result.append(self.observable_relation(
                     'Hosted_By', self.observable, {'type': 'ip', 'value': ip}))
             for domain in domains:
-                result.append(self.observable_relation(
-                    'Contains',
-                    self.observable,
-                    {'type': 'domain', 'value': domain})
-                )
+                if domain in self.observable['value']:
+                    result.append(self.observable_relation(
+                        'Contains',
+                        self.observable,
+                        {'type': 'domain', 'value': domain})
+                    )
         return result
